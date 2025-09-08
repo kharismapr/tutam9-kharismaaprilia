@@ -39,7 +39,14 @@ export default function ToDoListPage(){
       const response = await api.get('/todos', {
         params: { category: activeFilter }
       });
-      setTodos(response.data);
+      
+      // Sort todos with completed tasks at the bottom
+      const sortedTodos = [
+        ...response.data.filter(todo => !todo.completed),
+        ...response.data.filter(todo => todo.completed)
+      ];
+      
+      setTodos(sortedTodos);
     } catch (error) {
       console.error('Error fetching todos:', error);
     }
@@ -55,10 +62,15 @@ export default function ToDoListPage(){
         category: category
       });
       
-      // Sort todos by deadline when adding new todo
-      const newTodos = [...todos, response.data].sort((a, b) => 
-        new Date(a.deadline) - new Date(b.deadline)
-      );
+      // Add new todo and maintain completed tasks at bottom
+      const newTodo = response.data;
+      const completedTodos = todos.filter(todo => todo.completed);
+      const uncompletedTodos = todos.filter(todo => !todo.completed);
+      
+      // Add new todo to uncompleted section and sort by deadline
+      const newTodos = [...uncompletedTodos, newTodo]
+        .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+        .concat(completedTodos);
       
       setTodos(newTodos);
       setInput('');
