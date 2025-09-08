@@ -115,6 +115,7 @@ export default function ToDoListPage(){
                   type="datetime-local"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
+                  placeholder="Set the deadline"
                   className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 sm:appearance-auto appearance-none"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none sm:hidden">
