@@ -2,6 +2,26 @@ import React, { useState, useEffect } from 'react';
 import api from './api/config';
 import Panah from './assets/panah.svg';
 
+const formatDeadline = (isoString) => {
+  if (!isoString) return '';
+  
+  // Parse the ISO string components directly without creating a Date object
+  const [datePart, timePart] = isoString.split('T');
+  const [year, month, day] = datePart.split('-');
+  const [hours, minutes] = timePart.split(':');
+  
+  // Get day name without timezone conversion
+  const dateForDay = new Date(datePart + 'T00:00:00Z');
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = days[dateForDay.getUTCDay()];
+  
+  // Format components
+  const formattedDate = `${day}/${month}/${year.slice(-2)}`;
+  const formattedTime = `${hours}.${minutes}`;
+  
+  return `${dayName}, ${formattedDate} ${formattedTime}`;
+};
+
 export default function ToDoListPage(){
   const [input, setInput] = useState('');
   const [deadline, setDeadline] = useState('');
@@ -28,7 +48,7 @@ export default function ToDoListPage(){
   const addTodo = async () => {
     if (!input.trim() || !deadline.trim()) return;
     
-    try {
+    try {      
       const response = await api.post('/todos', { 
         title: input,
         deadline: deadline,
@@ -88,18 +108,28 @@ export default function ToDoListPage(){
               placeholder="Add a new task..."
               className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50"
             />
-            <div className="flex gap-2">
-              <input
-                type="datetime-local"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-                className="flex-1 border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50"
-              />
-              <div className="relative">
+            <div className="flex flex-col sm:flex-row gap-2">
+              {/* Date and Time Input - Calendar Icon for Mobile */}
+              <div className="relative flex-1">
+                <input
+                  type="datetime-local"
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                  className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 sm:appearance-auto appearance-none"
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none sm:hidden">
+                  <div className="h-5 w-5 text-sage-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Category Dropdown */}
+              <div className="relative w-full sm:w-auto">
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="appearance-none border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 pr-10 w-full"
+                  className="w-full appearance-none border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 pr-10"
                 >
                   <option value="Academic">Academic</option>
                   <option value="Organization">Organization</option>
@@ -110,9 +140,11 @@ export default function ToDoListPage(){
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage-600 pointer-events-none"
                 />
               </div>
+
+              {/* Add Task Button */}
               <button
                 onClick={addTodo}
-                className="bg-gradient-to-r from-sage-400 to-sage-600 text-white font-bold px-6 py-3 rounded-lg hover:from-sage-600 hover:to-sage-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-sage-400 to-sage-600 text-white font-bold px-6 py-3 rounded-lg hover:from-sage-600 hover:to-sage-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Add Task
               </button>
@@ -122,26 +154,28 @@ export default function ToDoListPage(){
 
         {/* Category Filter */}
         <div className="max-w-2xl mx-auto mb-6">
-          <div className="flex gap-2 justify-center">
+          <div className="flex gap-2 justify-center px-2">
             <button
               onClick={() => setActiveFilter('Academic')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+              className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                 activeFilter === 'Academic'
-                  ? 'bg-sage-500 text-white'
+                  ? 'bg-sage-500 text-white shadow-lg'
                   : 'bg-white/50 text-sage-700 hover:bg-sage-100'
               }`}
             >
-              Academic
+              <span className="hidden sm:inline">Academic Tasks</span>
+              <span className="sm:hidden">Academic</span>
             </button>
             <button
               onClick={() => setActiveFilter('Organization')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+              className={`flex-1 sm:flex-none px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                 activeFilter === 'Organization'
-                  ? 'bg-sage-500 text-white'
+                  ? 'bg-sage-500 text-white shadow-lg'
                   : 'bg-white/50 text-sage-700 hover:bg-sage-100'
               }`}
             >
-              Organization
+              <span className="hidden sm:inline">Organization Tasks</span>
+              <span className="sm:hidden">Organization</span>
             </button>
           </div>
         </div>
@@ -167,7 +201,7 @@ export default function ToDoListPage(){
                         {todo.title}
                       </span>
                       <span className="text-sm text-sage-500">
-                        🕒 {new Date(todo.deadline).toLocaleString()}
+                        🕒 {formatDeadline(todo.deadline)}
                       </span>
                     </div>
                   </div>
