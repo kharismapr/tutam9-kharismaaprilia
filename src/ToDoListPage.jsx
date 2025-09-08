@@ -12,7 +12,7 @@ const formatDeadline = (isoString) => {
   
   // Get day name without timezone conversion
   const dateForDay = new Date(datePart + 'T00:00:00Z');
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const dayName = days[dateForDay.getUTCDay()];
   
   // Format components
@@ -100,7 +100,7 @@ export default function ToDoListPage(){
 
         {/* Form Todo */}
         <div className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg mb-8">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <input
               type="text"
               value={input}
@@ -109,20 +109,29 @@ export default function ToDoListPage(){
               className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              {/* Date and Time Input - Calendar Icon for Mobile */}
+              {/* Date and Time Input */}
               <div className="relative flex-1">
-                <input
-                  type="datetime-local"
-                  value={deadline}
-                  onChange={(e) => setDeadline(e.target.value)}
-                  placeholder="Set the deadline"
-                  className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 sm:appearance-auto appearance-none"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none sm:hidden">
-                  <div className="h-5 w-5 text-sage-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </div>
+                <div className="relative">
+                  <input
+                    type="datetime-local"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    className="w-full border border-sage-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sage-500 bg-white/50 sm:appearance-auto appearance-none peer"
+                  />
+                  
+                  {/* Mobile-only Placeholder overlay */}
+                  {!deadline && (
+                    <div className="sm:hidden absolute left-0 top-0 px-4 py-3 pointer-events-none text-sm text-gray-500 mt-1 flex items-center gap-2 bg-white/50 ">
+                      <span>Set the deadline</span>
+                    </div>
+                  )}
                 </div>
+                {/* Desktop-only Selected deadline display */}
+                {deadline && (
+                  <div className="hidden sm:block absolute -top-6 left-0 text-sm text-sage-600 font-medium bg-white/90 px-2 py-1 rounded-t-lg shadow-sm">
+                    Selected: {formatDeadline(deadline)}
+                  </div>
+                )}
               </div>
 
               {/* Category Dropdown */}
