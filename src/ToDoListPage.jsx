@@ -74,9 +74,25 @@ export default function ToDoListPage(){
   const toggleTodoComplete = async (id) => {
     try {
       const response = await api.patch(`/todos/${id}/toggle`);
-      setTodos(todos.map(todo => 
-        todo.id === id ? response.data : todo
-      ));
+      const updatedTodo = response.data;
+      
+      // Remove the toggled todo from the current position
+      const remainingTodos = todos.filter(todo => todo.id !== id);
+      
+      // Create new array with completed todos at the bottom
+      const newTodos = [
+        ...remainingTodos.filter(todo => !todo.completed),
+        ...remainingTodos.filter(todo => todo.completed),
+      ];
+      
+      // Insert the updated todo based on its completion status
+      if (updatedTodo.completed) {
+        newTodos.push(updatedTodo); // Add completed todo to the end
+      } else {
+        newTodos.unshift(updatedTodo); // Add uncompleted todo to the beginning
+      }
+      
+      setTodos(newTodos);
     } catch (error) {
       console.error('Error toggling todo completion:', error);
     }

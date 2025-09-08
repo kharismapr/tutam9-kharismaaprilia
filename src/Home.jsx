@@ -16,9 +16,9 @@ export default function Home() {
 
       {/* Left Section */}
       <div className="md:w-1/2 text-center md:text-left">
-        <h1 className="text-4xl font-bold">Welcome to my to do list!</h1>
+        <h1 className="text-4xl font-bold">WELCOME ORANG KEREN!</h1>
         <p className="text-lg my-10">
-          Seru banget dah jadi orang sibuk, kek suka bikin mikir terus jadi pusing jir. Tapi lega banget kalo bisa kelar apalagi sesuai harapan. YA GASIH??
+          Seru banget dah jadi orang sibuk, kek suka bikin mikir terus jadi pusing jir. Tapi lega banget kalo bisa kelar apalagi kalo sesuai harapan. YAA GASIH??
         </p>
         <Link
           to="/todolist"
