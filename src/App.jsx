@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import Home from './Home';
+import Footer from './Footer';
 import TodoListPage from './ToDoListPage';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );
