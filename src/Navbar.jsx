@@ -1,23 +1,23 @@
 import React from 'react';
+import Rawr from './assets/my logo.png';
 import { Link } from 'react-router-dom';
+
 
 export default function Navbar() {
   return (
-    <nav className="bg-[#5CC3C3] text-white p-4 shadow-md">
+    <nav className="bg-gradient-to-r from-sage-400 to-sage-600 text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <div>
-          <h1 className="text-xl font-bold">My To Do List </h1>
+        <div className="flex items-center gap-2">
+          <img src={Rawr} alt="Logo" className="h-8 w-auto mr-2" />
+          <h1 className="text-xl font-bold">Kharisma's To Do List</h1>
         </div>
-        <div className="flex items-center space-x-4">
-          <Link to="/home" className="text-sm md:text-base hover:underline font-semibold">
+        <div className="flex items-center space-x-6 mr-2">
+          <Link to="/home" className="text-md md:text-base hover:underline font-bold">
             Home
           </Link>
-          <Link to="/todolist" className="text-sm md:text-base hover:underline font-semibold">
+          <Link to="/todolist" className="text-md md:text-base hover:underline font-bold">
             Todo List
           </Link>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm md:text-base font-semibold">Kharisma Aprilia</span>
-          </div>
         </div>
       </div>
     </nav>
